@@ -5,6 +5,7 @@ import { app } from '@/scripts/app'
 import { useMaskEditorStore } from '@/stores/maskEditorStore'
 import { useDialogStore } from '@/stores/dialogStore'
 import { useMaskEditor } from '@/composables/maskeditor/useMaskEditor'
+import { useSelectedLiteGraphItems } from '@/composables/canvas/useSelectedLiteGraphItems'
 
 function openMaskEditor(node: LGraphNode): void {
   if (!node) {
@@ -59,10 +60,11 @@ app.registerExtension({
       icon: 'pi pi-pencil',
       label: 'Open Mask Editor for Selected Node',
       function: () => {
-        const selectedNodes = app.canvas.selected_nodes
-        if (!selectedNodes || Object.keys(selectedNodes).length !== 1) return
+        const { getSelectedNodes } = useSelectedLiteGraphItems()
+        const selectedNodes = getSelectedNodes()
+        if (selectedNodes?.length !== 1) return
 
-        const selectedNode = selectedNodes[Object.keys(selectedNodes)[0]]
+        const selectedNode = selectedNodes[0]
         openMaskEditor(selectedNode)
       }
     },
